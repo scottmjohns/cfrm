@@ -56,9 +56,10 @@ class Node:
         self.c2 = c2
         self.prevActions = prevActions
         self.nextActions: list[str] | None = next_actions[''.join(self.prevActions)]
+        self.terminal_utility: int = None
     
     def __str__(self):
-        return f'\nNode: {self.c1=} {self.c2=} {self.prevActions} {self.nextActions}'
+        return f'\nNode: {self.c1=} {self.c2=} {self.prevActions} {self.nextActions} {self.terminal_utility}'
     
     def __repr__(self):
         return self.__str__()
@@ -111,6 +112,11 @@ def create_next_infosets(level, prevIS=None) -> set[InfoSet]:
             else:
                 for c in otherCards[i2.c1]:
                     i2.nodes.add(Node(i2.c1, c, i2.actions))
+    for i in nfosets:
+        for n in i.nodes:
+            tu = calc_terminals(n.prevActions, n.c1, n.c2)
+            if tu:
+                n.terminal_utility = tu
     for i in nfosets:
         print(i)
     return nfosets
