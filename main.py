@@ -1,4 +1,5 @@
 from enum import StrEnum, auto
+from fractions import Fraction
 
 class Action(StrEnum):
     CHECK = 'x'
@@ -121,11 +122,16 @@ def create_next_infosets(level, prevIS=None) -> set[InfoSet]:
         print(i)
     return nfosets
 
+def initialize_strategies(nfosets: set[InfoSet]) -> dict[[Node, str], Fraction]:
+    return {(n, a): Fraction(1,2) for i in nfosets for n in i.nodes if n.nextActions for a in n.nextActions}
+
 def main():
     is1 = create_next_infosets(level=1)
     is2 = create_next_infosets(level=2, prevIS=is1)
     is3 = create_next_infosets(level=3, prevIS=is2)
     is4 = create_next_infosets(level=4, prevIS=is3)
+    strategies = initialize_strategies(is1|is2|is3|is4)
+
 
 if __name__ == "__main__":
     main()
